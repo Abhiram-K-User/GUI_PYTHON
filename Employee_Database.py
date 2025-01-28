@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-import ast
 import json
 main=tk.Tk()
 main.title("Database Table")
