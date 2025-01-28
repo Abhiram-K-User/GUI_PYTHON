@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import ast
+import json
 main=tk.Tk()
 main.title("Database Table")
 main.geometry("400x400")
@@ -40,6 +41,7 @@ def delete():
 
 def create_window():
     win=tk.Toplevel(main)
+    win.geometry("300x150")
     win.title("Creation Window")
     label=tk.Label(win,text="Name:").grid(row=0,column=0)
     entry=tk.Entry(win,textvariable=EmpName).grid(row=0,column=1)
@@ -54,6 +56,7 @@ def create_window():
 def search_window():
     s=tk.Toplevel(main)
     s.title("Search Window")
+    s.geometry("300x100")
     label=tk.Label(s,text="Enter the Employee ID").pack()
     entry=tk.Entry(s,textvariable=search_ele).pack()
     submit=tk.Button(s,command=lambda:search(),text="Search").pack()
@@ -78,28 +81,27 @@ def display_employee():
 
 def delete_window():
     d=tk.Toplevel(main)
+    d.geometry("400x100")
     label=tk.Label(d,text="Enter the Employee ID to delete").pack()
     entry=tk.Entry(d,textvariable=search_ele).pack()
     submit=tk.Button(d,command=lambda:delete(),text="Delete").pack()
 
 def save_file():
-    with open ("savefile.txt","w") as savefile:
-        savefile.write(str(Employee))
-        messagebox.showinfo(message="File successfully Saved!")
+    with open ("savefile.json","w") as file:
+        json.dump(Employee,file)
+        messagebox.showinfo(message="File successfully Saved!",title="Save Window")
 def load_file():
     global Employee
     try:
-        with open("savefile.txt","r") as savefile:
-            x=savefile.read()
+        with open("savefile.json","r") as file:
             try:
-                Employee=ast.literal_eval(x)
-                messagebox.showinfo(message="File successfully Loaded!")
+                Employee=json.load(file)
+                messagebox.showinfo(message="File successfully Loaded!",title="Load Window")
             except SyntaxError:
                 messagebox.showerror(message="File was unable to be loaded!")
     except FileNotFoundError:
         messagebox.showerror(message="Save file was unable to be found")
         
-
 button=tk.Button(main,command=lambda:create_window(),text="Create Employee",pady=20).grid(row=0,column=0)
 button=tk.Button(main,command=lambda:search_window(),text="Search Employee",pady=20).grid(row=1,column=0)
 button=tk.Button(main,command=lambda:delete_window(),text="Delete Employee",pady=20).grid(row=2,column=0)
