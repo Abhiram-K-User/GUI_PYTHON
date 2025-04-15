@@ -36,7 +36,7 @@ def secondary_win():
     else:
         messagebox.showerror(message=f"An error has occurred Status Code: {a.status_code}",title="ERROR")
 
-display_quer=tk.Label(root,text="Enter the Year, Month and Day respectively in the boxes",font=("Times New Roman",16,"bold"))
+display_quer=tk.Label(root,text="Enter the Year, Month and Day respectively in the boxes(YYYY/MM/DD)",font=("Times New Roman",16,"bold"))
 display_quer.grid(row=1,column=0)
 year_label=tk.Label(root,text="Year:")
 year_label.grid(row=3,column=0)
