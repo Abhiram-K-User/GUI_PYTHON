@@ -3,6 +3,7 @@ import tkinter as tk
 from PIL import Image,ImageTk
 from io import BytesIO
 from tkinter import messagebox
+from tkinter.filedialog import asksaveasfilename
 root=tk.Tk()
 root.title("APOD Displaying App")
 year_var=tk.StringVar()
@@ -17,6 +18,16 @@ def retrieve_image(url):
     except:
         print("Image retrieval error")
 
+def img_download(img):
+    file_extensions=[("JPG File",".jpg"),("PNG File",".png")]
+    file_path=asksaveasfilename(filetypes=file_extensions,defaultextension=file_extensions)
+    if(file_path):
+        save_img=Image.open(BytesIO(retrieve_image(img)))
+        save_img.save(file_path)
+        messagebox.showinfo(message="File successfully saved!",title="Success!")
+    else:
+        messagebox.showerror(message="Invalid File Path!", title="An error has occurred")
+
 def secondary_win():
     a=rq.get(f"https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date={year_var.get()}-{month_var.get()}-{day_var.get()}")
     if(a.status_code==200):
@@ -30,13 +41,16 @@ def secondary_win():
         img_label=tk.Label(sub_win,image=photo)
         img_label.pack()
         img_label.image=photo #creates a reference for the photo
-        sub_text=tk.Label(sub_win,text="Description",font=("Arial",15,"bold"),bg="light green").pack()
+        sub_text=tk.Label(sub_win,text="Description",font=("Arial",18,"bold"),bg="light green").pack()
         img_desc=tk.Label(sub_win,text=desc,wraplength=600,bg="light blue")
         img_desc.pack()
+        save_img=tk.Button(sub_win,text="Save Image",command=lambda:img_download(c))
+        save_img.pack()
     else:
         messagebox.showerror(message=f"An error has occurred Status Code: {a.status_code}",title="ERROR")
 
-display_quer=tk.Label(root,text="Enter the Year, Month and Day respectively in the boxes(YYYY/MM/DD)",font=("Times New Roman",16,"bold"))
+
+display_quer=tk.Label(root,text="Enter the Year, Month and Day respectively in the boxes (YYYY/MM/DD)",font=("Times New Roman",16,"bold"))
 display_quer.grid(row=1,column=0)
 year_label=tk.Label(root,text="Year:")
 year_label.grid(row=3,column=0)
